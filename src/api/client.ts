@@ -8,12 +8,30 @@ const api = axios.create({
   },
 });
 
-export const fetchCarts = async (limit: number, skip: number): Promise<CartsListResponse> => {
+export const getCarts = async (limit: number, skip: number): Promise<CartsListResponse> => {
   const { data } = await api.get<CartsListResponse>('/carts', { params: { limit, skip } });
   return data;
 };
 
-export const fetchCart = async (id: number): Promise<Cart> => {
+export const getCartsByUser = async (
+  userId: number,
+  limit: number,
+  skip: number
+): Promise<CartsListResponse> => {
+  try {
+    const { data } = await api.get<CartsListResponse>(`/carts/user/${userId}`, {
+      params: { limit, skip },
+    });
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return { carts: [], total: 0, skip, limit };
+    }
+    throw error;
+  }
+};
+
+export const getCart = async (id: number): Promise<Cart> => {
   const { data } = await api.get<Cart>(`/carts/${id}`);
   return data;
 };
