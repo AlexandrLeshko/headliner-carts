@@ -6,6 +6,7 @@ type StyledButtonProps = {
 
 export const StyledButton = styled.button<StyledButtonProps>`
   display: inline-flex;
+  align-items: center;
   gap: 0.25rem;
   border: 2px solid ${({ theme }) => theme.colors.border};
 
@@ -30,7 +31,7 @@ export const StyledButton = styled.button<StyledButtonProps>`
     transform: translate(-0.1rem, -0.1rem);
     box-shadow: 0.2rem 0.2rem 0 0 ${({ theme }) => theme.colors.shadow};
     background-color: ${({ theme, variant }) =>
-      variant === 'danger' ? theme.colors.buttonDangerHover : theme.colors.buttonDefaultHover};
+    variant === 'danger' ? theme.colors.buttonDangerHover : theme.colors.buttonDefaultHover};
   }
 
   &:disabled {
@@ -42,6 +43,6 @@ export const StyledButton = styled.button<StyledButtonProps>`
     box-shadow: 0 0 0 0 ${({ theme }) => theme.colors.shadow};
     transform: translate(0, 0);
     background-color: ${({ theme, variant }) =>
-      variant === 'danger' ? theme.colors.buttonDanger : theme.colors.buttonDefault};
+    variant === 'danger' ? theme.colors.buttonDanger : theme.colors.buttonDefault};
   }
 `;

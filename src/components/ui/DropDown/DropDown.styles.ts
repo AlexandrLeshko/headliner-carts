@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
 
 export const Trigger = styled.button`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   text-align: center;
   gap: 0.25rem;
