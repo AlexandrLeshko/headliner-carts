@@ -22,11 +22,11 @@ export const ProductList = styled.ul`
   grid-template-columns: 1fr;
   align-content: start;
 
-  @media (min-width: 768px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
     grid-template-columns: repeat(3, 1fr);
   }
 `;

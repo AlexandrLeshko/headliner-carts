@@ -25,13 +25,13 @@ export const Wrapper = styled.div<WrapperProps>`
   margin: ${({ $fullPage }) => ($fullPage ? '0 auto' : '0')};
   padding: ${({ $compact }) => ($compact ? '0' : '1rem')};
 
-  ${({ $compact }) =>
+  ${({ $compact, theme }) =>
     !$compact &&
     `
-    @media (min-width: 768px) {
+    @media (min-width: ${theme.breakpoints.tablet}) {
       padding: 1.5rem;
     }
-    @media (min-width: 1024px) {
+    @media (min-width: ${theme.breakpoints.desktop}) {
       padding: 2rem;
     }
   `}

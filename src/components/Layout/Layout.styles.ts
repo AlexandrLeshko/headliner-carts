@@ -17,11 +17,11 @@ export const Inner = styled.div`
   margin: 0 auto;
   padding: 1rem;
 
-  @media (min-width: 768px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
     padding: 1.5rem;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
     padding: 2rem;
   }
 `;

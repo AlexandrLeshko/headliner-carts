@@ -10,12 +10,20 @@ export const Wrapper = styled.div`
 `;
 
 export const Nav = styled.nav`
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1rem;
   border: 2px solid ${({ theme }) => theme.colors.border};
   background-color: ${({ theme }) => theme.colors.accent};
   padding: 2rem 1.5rem;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
+    grid-template-columns: 4fr 1fr;
+  }
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
+    grid-template-columns: 7fr 1fr;
+  }
 `;
 
 export const FormLabel = styled.label`
@@ -32,11 +40,11 @@ export const CartList = styled.ul`
   grid-template-columns: 1fr;
   align-content: start;
 
-  @media (min-width: 768px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.tablet}) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: ${({ theme }) => theme.breakpoints.desktop}) {
     grid-template-columns: repeat(3, 1fr);
   }
 `;
