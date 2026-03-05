@@ -1,18 +1,17 @@
-import { memo } from 'react';
-import { Button } from '@components/ui/Button';
-import { Input } from '@components/ui/Input';
-import { Label } from '@components/ui/Label';
+import { memo, useState } from 'react';
+import { Button, Input, Label } from '@components/ui';
 import {
   ProductCard,
   ThumbnailWrap,
   Thumbnail,
+  ThumbnailFallback,
   ProductContent,
   QuantityForm,
   QuantityLabel,
   ButtonRow,
 } from './CartDetail.styles';
-import type { CartProduct } from '../../api/types';
-import { Check, X } from 'lucide-react';
+import type { CartProduct } from '@api/types';
+import { Check, ImageOff, X } from 'lucide-react';
 
 type ProductCardItemProps = {
   product: CartProduct;
@@ -27,11 +26,22 @@ export const ProductCardItem = memo(function ProductCardItem({
   onQuantitySubmit,
   onRemove,
 }: ProductCardItemProps) {
+  const [imgError, setImgError] = useState(false);
+
   return (
-    <ProductCard>
+    <ProductCard aria-label={product.title}>
       <ThumbnailWrap>
-        {product.thumbnail && (
-          <Thumbnail src={product.thumbnail} alt={product.title} />
+        {product.thumbnail && !imgError ? (
+          <Thumbnail
+            src={product.thumbnail}
+            alt={`Photo of ${product.title}`}
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <ThumbnailFallback aria-label="Image unavailable">
+            <ImageOff size={48} />
+          </ThumbnailFallback>
         )}
       </ThumbnailWrap>
       <ProductContent>
@@ -42,7 +52,10 @@ export const ProductCardItem = memo(function ProductCardItem({
         {(product.discountPercentage ?? 0) > 0 && (
           <p><Label>Discount:</Label> {(product.discountPercentage ?? 0).toFixed(1)}%</p>
         )}
-        <QuantityForm onSubmit={(e) => onQuantitySubmit(product.id, e)}>
+        <QuantityForm
+          onSubmit={(e) => onQuantitySubmit(product.id, e)}
+          aria-label={`Update quantity for ${product.title}`}
+        >
           <QuantityLabel>
             <Label>Quantity</Label>
             <Input
@@ -50,10 +63,11 @@ export const ProductCardItem = memo(function ProductCardItem({
               name="quantity"
               defaultValue={product.quantity}
               min="0"
+              aria-label={`Quantity for ${product.title}`}
             />
           </QuantityLabel>
           <ButtonRow>
-            <Button type="submit" disabled={isPending}>
+            <Button type="submit" disabled={isPending} aria-label={`Confirm quantity for ${product.title}`}>
               <Check size={24} />
               <span>Update</span>
             </Button>
@@ -62,6 +76,7 @@ export const ProductCardItem = memo(function ProductCardItem({
               variant="danger"
               disabled={isPending}
               onClick={() => onRemove(product.id)}
+              aria-label={`Remove ${product.title} from cart`}
             >
               <X size={24} />
               <span>Remove</span>

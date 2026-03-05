@@ -1,11 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useCarts } from '../../hooks/useCarts';
-import { usePaginationStore } from '../../store';
-import { Button } from '@components/ui/Button';
-import { DropDown } from '@components/ui/DropDown';
-import { Input } from '@components/ui/Input';
-import { Label } from '@components/ui/Label';
-import { StatusState } from '@components/ui/StatusState';
+import { Helmet } from 'react-helmet-async';
+import { useCarts } from '@hooks/useCarts';
+import { usePrefetchCart } from '@hooks/usePrefetchCart';
+import { usePaginationStore, selectSkip } from '@store/paginationStore';
+import { Button, DropDown, Input, Label, StatusState } from '@components/ui';
 import {
   Wrapper,
   Nav,
@@ -19,25 +17,26 @@ import {
 import { ArrowLeft, ArrowRight, ArrowUpRight, CircleAlert, RotateCw, SearchAlert } from 'lucide-react';
 
 export const CartListPage = () => {
-  const { page, limit, userIdFilter, setPage, setLimit, setUserIdFilter, getSkip } =
+  const { page, limit, userIdFilter, setPage, setLimit, setUserIdFilter } =
     usePaginationStore();
+  const skip = usePaginationStore(selectSkip);
   const [filterInput, setFilterInput] = useState(
     () => userIdFilter?.toString() ?? ''
   );
-  const skip = getSkip();
   const scrollYRef = useRef(0);
-  const { data, isLoading, isError, error, refetch } = useCarts(
+  const { data, isLoading, isPlaceholderData, isError, error, refetch } = useCarts(
     limit,
     skip,
     userIdFilter
   );
+  const prefetchCart = usePrefetchCart();
 
   const limitOptions = useMemo(
     () => [
-      { value: 5, label: '5' },
-      { value: 10, label: '10' },
-      { value: 20, label: '20' },
-      { value: 50, label: '50' },
+      { value: 6, label: '6' },
+      { value: 12, label: '12' },
+      { value: 24, label: '24' },
+      { value: 48, label: '48' },
     ],
     []
   );
@@ -76,17 +75,23 @@ export const CartListPage = () => {
   }, [filterInput, setUserIdFilter]);
 
   if (isLoading) {
-    return <StatusState title="Loading..." />;
+    return (
+      <StatusState
+        title="Loading..."
+        aria-live="polite"
+        aria-busy
+      />
+    );
   }
 
   if (isError) {
     return (
       <StatusState
-        icon={<CircleAlert size={50} />}
+        icon={<CircleAlert size={24} />}
         title="Error"
         description={error instanceof Error ? error.message : String(error)}
         action={
-          <Button type="button" onClick={() => refetch()}>
+          <Button type="button" onClick={() => refetch()} aria-label="Retry loading carts">
             <RotateCw size={24} />
             <span>Retry</span>
           </Button>
@@ -101,8 +106,18 @@ export const CartListPage = () => {
   const isEmpty = !data?.carts?.length;
 
   return (
-    <Wrapper>
-      <Nav>
+    <Wrapper $faded={isPlaceholderData}>
+      <Helmet>
+        <title>
+          {userIdFilter
+            ? `Carts for User ${userIdFilter} — Page ${page}`
+            : `Shopping Carts — Page ${page}`}
+        </title>
+      </Helmet>
+
+      <h1 className="sr-only">Shopping Carts</h1>
+
+      <Nav aria-label="Cart filters">
         <FormLabel>
           Filter by User ID:
           <Input
@@ -111,6 +126,7 @@ export const CartListPage = () => {
             placeholder="User ID"
             value={filterInput}
             onChange={(e) => setFilterInput(e.target.value)}
+            aria-label="Filter carts by user ID"
           />
         </FormLabel>
         <FormLabel>
@@ -125,44 +141,51 @@ export const CartListPage = () => {
 
       {isEmpty ? (
         <StatusState
-          icon={<SearchAlert size={50} />}
+          icon={<SearchAlert size={24} />}
           title="No carts found"
           description="Try different filters"
         />
       ) : (
         <>
-          <CartList>
+          <CartList aria-label="Cart list">
             {data!.carts.map((cart) => (
               <li key={cart.id}>
-                <CartLink to={`/carts/${cart.id}`}>
+                <CartLink
+                  to={`/carts/${cart.id}`}
+                  aria-label={`View cart ${cart.id}`}
+                  onMouseEnter={() => prefetchCart(cart.id)}
+                  onFocus={() => prefetchCart(cart.id)}
+                >
                   <article>
                     <p><Label>ID:</Label> {cart.id}</p>
                     <p><Label>User ID:</Label> {cart.userId}</p>
                     <p><Label>Items:</Label> {cart.totalQuantity}</p>
                     <p><Label>Total:</Label> ${(cart.discountedTotal ?? 0).toFixed(2)}</p>
                   </article>
-                  <ArrowUpRight size={24} />
+                  <ArrowUpRight size={24} aria-hidden="true" />
                 </CartLink>
               </li>
             ))}
           </CartList>
           {totalPages > 1 && (
-            <Pagination>
+            <Pagination role="navigation" aria-label="Pagination">
               <Button
                 type="button"
                 disabled={!hasPrev}
                 onClick={() => handlePageChange(page - 1)}
+                aria-label="Previous page"
               >
                 <ArrowLeft size={24} />
                 <span>Prev</span>
               </Button>
-              <PageInfo>
+              <PageInfo aria-live="polite" aria-atomic="true">
                 Page <PageInfoStrong>{page}</PageInfoStrong> of {totalPages}
               </PageInfo>
               <Button
                 type="button"
                 disabled={!hasNext}
                 onClick={() => handlePageChange(page + 1)}
+                aria-label="Next page"
               >
                 <span>Next</span>
                 <ArrowRight size={24} />

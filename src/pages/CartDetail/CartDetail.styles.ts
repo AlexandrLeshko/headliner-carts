@@ -49,6 +49,16 @@ export const Thumbnail = styled.img`
   object-fit: cover;
 `;
 
+export const ThumbnailFallback = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.border};
+  opacity: 0.4;
+`;
+
 export const ProductContent = styled.div`
   padding: 0.5rem;
   display: flex;

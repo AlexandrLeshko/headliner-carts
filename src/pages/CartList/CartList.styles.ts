@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ $faded?: boolean }>`
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   min-height: 0;
+  opacity: ${({ $faded }) => ($faded ? 0.7 : 1)};
+  transition: opacity 0.2s;
 `;
 
 export const Nav = styled.nav`
@@ -62,6 +64,11 @@ export const CartLink = styled(Link)`
   &:hover, &:focus {
     transform: translate(-0.1rem, -0.1rem);
     box-shadow: 0.2rem 0.2rem 0 0 ${({ theme }) => theme.colors.shadow};
+  }
+
+  &:active {
+    transform: translate(0, 0);
+    box-shadow: 0 0 0 0 ${({ theme }) => theme.colors.shadow};
   }
 `;
 
