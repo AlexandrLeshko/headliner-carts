@@ -20,26 +20,26 @@ export const Trigger = styled.button`
   transition: all 0.2s;
 
   &:hover, &:focus {
-    background-color: #99fc77;
+    background-color: ${({ theme }) => theme.colors.dropdownHover};
     transform: translate(-0.1rem, -0.1rem);
-    box-shadow: 0.2rem 0.2rem 0 0 #000;
+    box-shadow: 0.2rem 0.2rem 0 0 ${({ theme }) => theme.colors.shadow};
   }
 `;
 
-export const Menu = styled.div<{ isOpen: boolean }>`
+export const Menu = styled.div<{ $isOpen: boolean }>`
   position: absolute;
   left: 0;
   right: 0;
   z-index: 10;
   margin-top: 0.5rem;
-  background-color: #fff;
-  border: 2px solid #000;
+  background-color: ${({ theme }) => theme.colors.surface};
+  border: 2px solid ${({ theme }) => theme.colors.border};
   transform: translate(-0.1rem, -0.1rem);
-  box-shadow: 0.2rem 0.2rem 0 0 #000;
-  display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+  box-shadow: 0.2rem 0.2rem 0 0 ${({ theme }) => theme.colors.shadow};
+  display: ${({ $isOpen }) => ($isOpen ? 'block' : 'none')};
 `;
 
-export const MenuItem = styled.button`
+export const MenuItem = styled.button<{ $focused?: boolean }>`
   display: block;
   width: 100%;
   padding: 0.5rem 0.75rem;
@@ -49,6 +49,8 @@ export const MenuItem = styled.button`
   border-bottom: 2px dashed ${({ theme }) => theme.colors.border};
   cursor: pointer;
   transition: background-color 0.2s;
+  background-color: ${({ theme, $focused }) =>
+    $focused ? theme.colors.dropdownHover : 'transparent'};
 
   &:last-child {
     border-bottom: none;

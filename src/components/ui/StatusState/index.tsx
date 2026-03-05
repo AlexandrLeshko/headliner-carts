@@ -1,3 +1,4 @@
+import type { AriaAttributes } from 'react';
 import {
   FullWidthBg,
   Wrapper,
@@ -6,7 +7,7 @@ import {
   Description,
 } from './StatusState.styles';
 
-type StatusStateProps = {
+type StatusStateProps = AriaAttributes & {
   title: string;
   icon?: React.ReactNode;
   description?: string;
@@ -20,17 +21,22 @@ export const StatusState = ({
   description,
   action,
   fullPage,
+  ...ariaProps
 }: StatusStateProps) => {
   const isCompact = !icon && !description && !action;
 
   const content = (
-    <Wrapper $compact={isCompact} $fullPage={fullPage}>
-      {icon}
+    <Wrapper
+      role="status"
+      $compact={isCompact}
+      $fullPage={fullPage}
+      {...ariaProps}
+    >
       <Content>
-        <Title>{title}</Title>
+        <Title>{icon}{' '}{title}</Title>
         {description && <Description>{description}</Description>}
-        {action}
       </Content>
+      {action}
     </Wrapper>
   );
 

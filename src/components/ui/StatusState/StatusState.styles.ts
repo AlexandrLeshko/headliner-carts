@@ -17,7 +17,8 @@ export const FullWidthBg = styled.div`
 export const Wrapper = styled.div<WrapperProps>`
   flex: 1;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -40,11 +41,14 @@ export const Wrapper = styled.div<WrapperProps>`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 0.25rem;
 `;
 
 export const Title = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.5rem;
   font-weight: 800;
 `;
