@@ -1,30 +1,13 @@
-export interface CartProduct {
-  id: number;
-  title: string;
-  price: number;
-  quantity: number;
-  total: number;
-  discountPercentage: number;
-  discountedTotal: number;
-  thumbnail: string;
-}
+import type { z } from 'zod';
+import type {
+  CartProductSchema,
+  CartSchema,
+  CartsListResponseSchema,
+} from './schemas';
 
-export interface Cart {
-  id: number;
-  products: CartProduct[];
-  total: number;
-  discountedTotal: number;
-  userId: number;
-  totalProducts: number;
-  totalQuantity: number;
-}
-
-export interface CartsListResponse {
-  carts: Cart[];
-  total: number;
-  skip: number;
-  limit: number;
-}
+export type CartProduct = z.infer<typeof CartProductSchema>;
+export type Cart = z.infer<typeof CartSchema>;
+export type CartsListResponse = z.infer<typeof CartsListResponseSchema>;
 
 export interface UpdateCartPayload {
   merge: boolean;
