@@ -5,5 +5,4 @@ export interface PaginationState {
   setPage: (page: number) => void;
   setLimit: (limit: number) => void;
   setUserIdFilter: (userId: number | null) => void;
-  getSkip: () => number;
 }
