@@ -7,6 +7,7 @@ export const StyledInput = styled.input`
   transition: all 0.2s;
   font-size: 1rem;
   font-weight: 600;
+  background-color: ${({ theme }) => theme.colors.surface};
   -moz-appearance: textfield;
   appearance: textfield;
 
